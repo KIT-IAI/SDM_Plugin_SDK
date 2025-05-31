@@ -1,5 +1,5 @@
 # KITModelViewer Plugin SDK
-This SDK is ...
+Coming soon ...
 
 
 ## How to cite
