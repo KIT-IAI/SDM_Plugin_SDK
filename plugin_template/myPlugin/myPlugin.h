@@ -11,6 +11,7 @@
 #include <LogDialogFeature.hpp>
 #include <LogDialogFeatureHelper.hpp>
 #include <wx/nativewin.h>
+#include "PluginObserver.h"
 
 class MyPluginDlgImpl;
 
@@ -23,6 +24,8 @@ class MyPluginAction : public sdm::plugin::ActionFeatureHelper
     void execute() const override;
     bool isActive() const override;
 
+    void deleteDlg();
+
     void setMainFrameWnd(intptr_t hParentWnd)
     {
       if (!m_pContainerWindow)
@@ -32,10 +35,10 @@ class MyPluginAction : public sdm::plugin::ActionFeatureHelper
     }
     void setLogger(sdm::plugin::LiveLogInterface* pLiveLogInterface) { m_pLiveLogObserver = pLiveLogInterface; }
     void setDB(IfcDB::Populationi* pDB) { m_pDB = pDB; }
-    void setStates(IfcDB::utils::PopulationStates* pSates) { m_pStates = pSates; }
+    void setStates(IfcDB::utils::PopulationStates* pSates);
 
     void setIsDialogOpen(bool state) { m_isDialogOpen = state; }
-    MyPluginDlgImpl* getMyPluginDlg() { return m_pMyPluginDlg; }
+    MyPluginDlgImpl* getDlg() { return m_pMyPluginDlg; }
 
     sdm::plugin::LiveLogInterface* getLogger() { return m_pLiveLogObserver; }
     IfcDB::Populationi* getDB() { return m_pDB; }
@@ -49,6 +52,7 @@ class MyPluginAction : public sdm::plugin::ActionFeatureHelper
     sdm::plugin::LiveLogInterface* m_pLiveLogObserver = nullptr;
     IfcDB::Populationi* m_pDB = nullptr;
     IfcDB::utils::PopulationStates* m_pStates = nullptr;
+    PluginObserver* m_pObserver = nullptr;
 };
 
 class MyPlugin : public sdm::plugin::Plugin

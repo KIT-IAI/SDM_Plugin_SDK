@@ -25,21 +25,23 @@ MyPluginAction::MyPluginAction()
   : ActionFeatureHelper("ActionName")
 {
   wxInitialize();
-
-  m_pMyPluginDlg = new MyPluginDlgImpl(nullptr/*m_pContainerWindow*/, wxID_ANY, wxT("myPlugin Dialog"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE | wxSTAY_ON_TOP);
 }
 
 MyPluginAction::~MyPluginAction()
 {
+  wxUninitialize();
 }
 
 void MyPluginAction::execute() const
 {
   try
   {
+    auto pMyPluginDlg = new MyPluginDlgImpl(nullptr, wxID_ANY, wxT("myPlugin Dialog"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE | wxSTAY_ON_TOP);
     m_pMyPluginDlg->setMyPluginAction(const_cast<MyPluginAction*>(this));
     m_pMyPluginDlg->setLoggerInterface(m_pLiveLogObserver);
     m_pMyPluginDlg->Show();
+
+    const_cast<MyPluginDlgImpl*>(m_pMyPluginDlg) = pMyPluginDlg;
   }
   catch (const std::exception& e)
   {
@@ -57,8 +59,35 @@ bool MyPluginAction::isActive() const
   return false;
 }
 
+void MyPluginAction::deleteDlg()
+{
+  m_pStates->unsubscribe(*m_pObserver);
 
-MyPlugin::MyPlugin()
+  if (m_pMyPluginDlg)
+  {
+    delete m_pMyPluginDlg;
+    m_pMyPluginDlg = nullptr;
+  }
+
+  if (m_pObserver)
+  {
+    delete m_pObserver;
+    m_pObserver = nullptr;
+  }
+}
+
+void MyPluginAction::setStates(IfcDB::utils::PopulationStates* pSates)
+{
+  m_pStates = pSates;
+
+  if (!m_pObserver)
+  {
+    m_pObserver = new PluginObserver(*this);
+    m_pStates->subscribe(*m_pObserver);
+  }
+}
+
+PolyVrPlugin::PolyVrPlugin()
 {
   m_MainFrameObserver.attach([&](sdm::plugin::MainFrameInterface* pMainFrameInterface) { m_myPluginAction.setMainFrameWnd(pMainFrameInterface->getParentWnd()); });
   m_documentObserver.attach([this](IfcDB::Populationi* pDB) { setDB(pDB); });

@@ -10,7 +10,6 @@ PluginObserver::PluginObserver(MyPluginAction& myPluginAction)
 
 void PluginObserver::activate(bool first)
 {
-
 }
 
 void PluginObserver::deactivate(bool last)
@@ -19,16 +18,16 @@ void PluginObserver::deactivate(bool last)
   {
     m_myPluginAction.setIsDialogOpen(false);
 
-    auto pMyPluginDlg = m_myPluginAction.getMyPluginDlg();
+    auto pMyPluginDlg = m_myPluginAction.getDlg();
 
     if (pMyPluginDlg)
     {
       pMyPluginDlg->Close();
+      m_myPluginAction.deleteDlg();
     }
   }
 }
 
 void PluginObserver::selectEntity(IfcDB::ifcOid oid, bool selected)
 {
-
 }
