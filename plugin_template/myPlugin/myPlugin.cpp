@@ -87,7 +87,7 @@ void MyPluginAction::setStates(IfcDB::utils::PopulationStates* pSates)
   }
 }
 
-PolyVrPlugin::PolyVrPlugin()
+MyPlugin::MyPlugin()
 {
   m_MainFrameObserver.attach([&](sdm::plugin::MainFrameInterface* pMainFrameInterface) { m_myPluginAction.setMainFrameWnd(pMainFrameInterface->getParentWnd()); });
   m_documentObserver.attach([this](IfcDB::Populationi* pDB) { setDB(pDB); });

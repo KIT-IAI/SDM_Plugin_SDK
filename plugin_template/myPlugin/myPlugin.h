@@ -10,7 +10,6 @@
 #include <MessageDialogFeatureHelper.hpp>
 #include <LogDialogFeature.hpp>
 #include <LogDialogFeatureHelper.hpp>
-#include <wx/nativewin.h>
 #include "PluginObserver.h"
 
 class MyPluginDlgImpl;
@@ -28,10 +27,6 @@ class MyPluginAction : public sdm::plugin::ActionFeatureHelper
 
     void setMainFrameWnd(intptr_t hParentWnd)
     {
-      if (!m_pContainerWindow)
-      {
-        //m_pContainerWindow = new wxNativeContainerWindow((HWND)hParentWnd);
-      }
     }
     void setLogger(sdm::plugin::LiveLogInterface* pLiveLogInterface) { m_pLiveLogObserver = pLiveLogInterface; }
     void setDB(IfcDB::Populationi* pDB) { m_pDB = pDB; }
@@ -47,7 +42,6 @@ class MyPluginAction : public sdm::plugin::ActionFeatureHelper
   protected:
     bool m_isDialogOpen = false;
     intptr_t m_hParentWnd = 0;
-    wxNativeContainerWindow* m_pContainerWindow = nullptr;
     MyPluginDlgImpl* m_pMyPluginDlg = nullptr;
     sdm::plugin::LiveLogInterface* m_pLiveLogObserver = nullptr;
     IfcDB::Populationi* m_pDB = nullptr;
